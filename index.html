@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wedding RSVP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya&display=swap" rel="stylesheet" />
+  <style>
+
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    height: 100%;
+    font-family: 'Alegreya', serif;
+    background-color: white;
+    color: #333;
+    overflow-x: hidden;
+  }
+  .wrapper {
+    display: flex;
+    height: 100vh;
+    flex-direction: row;
+  }
+  .left-side {
+    flex: 1.5;
+  }
+  .left-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .right-side {
+  flex: 1;
+  padding: 40px 60px;
+  overflow-y: auto;
+  text-align: left;
+  display: block;
+  color: #333;
+}
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: left;
+  }
+  label {
+    font-weight: 600;
+    margin-top: 15px;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  #attendance-label {
+    margin-top: 20px;
+  }
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 2px solid #333;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    color: #333;
+    background-color: white;
+  }
+  input[type="text"]:focus,
+  select:focus {
+    border-color: #555;
+  }
+  #guest-names input {
+    margin-bottom: 15px;
+  }
+  button {
+    margin-top: 30px;
+    background-color: #333;
+    color: white;
+    font-size: 1.2rem;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  button:hover {
+    background-color: #555;
+  }
+  #form-section {
+    margin-top: 20px;
+    display: none;
+  }
+  #welcome-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  #guest-names-header {
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  #thank-you {
+    display: none;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: 40px;
+  }
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+  }
+  .radio-group label {
+    margin-bottom: 10px;
+    font-weight: normal;
+    color: #333;
+    cursor: pointer;
+  }
+  .radio-group input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  #couple-description {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  /* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left-side {
+    order: -1;
+    width: 100%;
+    height: auto;
+  }
+
+  .left-side img {
+    width: 100%;
+    height: auto;       /* Let it resize naturally */
+    object-fit: contain; /* Show the full image without cropping */
+    display: block;
+  }
+
+  .right-side {
+    flex: none;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="left-side">
+      <img src="20.JPG" alt="Wedding Image" />
+    </div>
+    <div class="right-side">
+      <h2 id="main-header">RSVP to Our Wedding</h2>
+      <p id="rsvp-reminder" style="font-size: 1.5rem;">Please RSVP <span style="font-weight: bolder;">Before June 7th</span></p>
+      <form id="rsvp-form">
+        <label for="guest-name">enter your first and last name: </label>
+        <input type="text" id="guest-name" placeholder="e.g. Jane Smith" required />
+
+        <button type="button" onclick="loadForm()">Next</button>
+
+
+
+        <div id="form-section">
+          <p id="welcome-name"></p>
+
+          <div id="couple-description"></div>
+
+          <label id="attendance-label">Will you attend?</label>
+          <div class="radio-group" id="attendance-group">
+            <label><input type="radio" name="attendance" value="Yes" required /> Yes</label>
+            <label><input type="radio" name="attendance" value="No" required /> No</label>
+          </div>
+
+          <div id="event-section">
+            <label>Which event will you be attending?</label>
+            <div class="radio-group" id="event-choice">
+              <label><input type="radio" name="event" value="Ceremony" required /> Ceremony</label>
+              <label><input type="radio" name="event" value="Reception" required /> Reception</label>
+              <label><input type="radio" name="event" value="Both" required /> Both</label>
+            </div>
+          </div>
+
+          <div id="main-meal-container"></div>
+          <div id="guest-names-header"></div>
+          <div id="guest-names"></div>
+
+          <button type="submit">Submit RSVP</button>
+        </div>
+      </form>
+
+      <div id="thank-you">
+        Thank you for RSVPing! We can’t wait to celebrate with you.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const guestData = {
+      "krystel alonzo": { name: "krystel alonzo & Family", allowedGuests: 2 },
+      "nicole bernabe": { name: " soon to be wifey", allowedGuests: 2 },
+      "rafael carabbacan": { name: "soon to be hubby", allowedGuests: 2 },
+      "julian alonzo": { name: "Julian Alonzo & Family", allowedGuests: 2 },
+      "chloe carabbacan": { name: "Chloe Carabbacan", allowedGuests: 6 },
+      "lolita carabbacan": { name: "Lolita & Tomas ", allowedGuests: 1}, 
+      "israel carabbacan": { name: "Israel Carabbacan  Family", allowedGuests: 0 }, 
+      "michael estaris": { name: "Michael Estaris", allowedGuests: 0 },
+      "karl dumpit": { name: "Karl Dumpit", allowedGuests: 0 },
+      "gilbert bernabe": { name: "Gilbert & Brent Bernabe ", allowedGuests: 1 },
+      "raishelee lacap-dones": { name: "Raishelee Lacap-Dones & Family", allowedGuests: 6 },
+      "eunice isa caalim": { name: "Eunice Isa Caalim & Family", allowedGuests: 2 },
+      "jessica sarmiento": { name: "Jessica & Jensen Sarmiento", allowedGuests: 1},
+      "divina caalim": { name: "Divina Caalim & Patrick St. James", allowedGuests: 1 },
+      "victoria de lara": { name: "Victoria De Lara & Family", allowedGuests: 2 },
+      "angel dela paz": { name: "Angel Dela Paz", allowedGuests: 0 },
+      "vanessa vengco": { name: "Vanessa Vengco & Family", allowedGuests: 4 },
+      "gerby malanay": { name: "Gerby Malanay", allowedGuests: 0 },
+      "mitzi amio": { name: "Mitzi Amio & David Hickey", allowedGuests: 1 },
+      "paola gellidon": { name: "Paola Gellidon & Aiza Dela Cruz", allowedGuests: 1 },
+      "edison ducusin": { name: "Edison Ducusin", allowedGuests: 0 },
+      "elaine pallarca  ": { name: "Elaine & Leonie Ann Pallarca", allowedGuests: 1 },
+      "maria bernabe": { name: "Maria Bernabe & Family", allowedGuests: 4 },
+      "raheem henlon": { name: "Raheem Henlon", allowedGuests: 0 },
+      "jan reyes": { name: "Jan Joseph & Jan Camillo Reyes", allowedGuests: 1 },
+      "john delos reyes": { name: "John Erick & Dulce Delos Reyes", allowedGuests: 1 },
+      "helen burchell": { name: "Helen & David Burchell", allowedGuests: 1 },
+      "nadine pantaleon": { name: "Nadine Pantaleon", allowedGuests: 0 },
+      "arlene moore": { name: "Arlene & Eli Moore", allowedGuests: 1 },
+      "crystal moore": { name: "Crystal Moore", allowedGuests: 0 },
+      "anjie costales": { name: "Anjie & Hannah Costales", allowedGuests: 1 },
+      "jessa diestro": { name: "Jessa Diestro", allowedGuests: 0 },
+      "allan fajardo": { name: "Allan Fajardo", allowedGuests: 0 },
+      "shan lacap": { name: "Shan Lacap & Ali Gutierrez", allowedGuests: 1 },
+      "joyous lascuna": { name: "Joyous Lascuna & Family", allowedGuests: 2 },
+      "melanie munden": { name: "Melanie & Richard Munden", allowedGuests: 1 },
+      "cindy panganiban": { name: "Cindy Panganiban and Family", allowedGuests: 3 },
+      "uziel rivera": { name: "Uziel Rivera & Kathlene Lecciones", allowedGuests: 1 },
+      "enna jardinero": { name: "Enna Jardinero & Brandon Landry", allowedGuests: 1 },
+      "sol matalam": { name: "Sol Matalam", allowedGuests: 0 },
+      "jennifer nolasco": { name: "Jennifer Nolasco", allowedGuests: 0 },
+      "dex quizada": { name: "Dex Quizada", allowedGuests: 0 },
+      "issa baligod": { name: "Issa Baligod", allowedGuests: 0 },
+      "ansel amio": { name: "Ansel Amio & Family", allowedGuests: 4 },
+      "kevin caalim": { name: "Kevin Caalim  Family", allowedGuests: 2 },
+      "cydi patal": { name: "Cydi Patal", allowedGuests: 0 },
+      "jeremy lecciones ": { name: "Jeremy Lecciones", allowedGuests: 0 },
+      "ross manubay": { name: "Ross Manubay", allowedGuests: 0 },
+      "alfred ortile": { name: "Alfred Ortile", allowedGuests: 0 },
+      "andrew ortile": { name: "Andrew Ortile", allowedGuests: 0 },
+      "almira ortile": { name: "Almira Ortile", allowedGuests: 1 },
+      "gigi ortile": { name: "Gigi Pagal-Ortile", allowedGuests: 0 },
+      "hanlyn barlomento": { name: "Hanlyn Barlomento", allowedGuests: 0 },
+      "angelina juanillo": { name: "Angelina Juanillo", allowedGuests: 0 },
+      "apolinaria mercader ": { name: "Apolinaria Mercader", allowedGuests: 0 },
+      "kristel ventura": { name: "Kristel & Ian Ventura", allowedGuests: 1 },
+      "jovie yamazaki": { name: "Jovie Yamazaki & Arvin Eusebio", allowedGuests: 1 },
+      "via atienza": { name: "Via & Jerrick  Atienza", allowedGuests: 1 },
+      "alva ortile": { name: "Alva Ortile & Family", allowedGuests: 3 },
+      "elvie serrano": { name: "Elvie & Noel Serrano", allowedGuests: 1 },
+      "arleen bernalte": { name: "Arleen & Rolly Bernalte", allowedGuests: 1 },
+    };
+
+    let currentUser = null;
+
+    // Helper to get submitted names from localStorage
+    function getSubmittedNames() {
+      const stored = localStorage.getItem('submittedNames');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    // Helper to save submitted name to localStorage
+    function saveSubmittedName(name) {
+      const names = getSubmittedNames();
+      names.push(name.toLowerCase());
+      localStorage.setItem('submittedNames', JSON.stringify(names));
+    }
+
+    // Check if user already submitted
+    function hasSubmitted(name) {
+      const names = getSubmittedNames();
+      return names.includes(name.toLowerCase());
+    }
+
+    function loadForm() {
+      const fullNameInput = document.getElementById("guest-name");
+      const fullName = fullNameInput.value.trim().toLowerCase();
+
+      if (!fullName) {
+        alert("Please enter your name.");
+        return;
+      }
+
+      if (hasSubmitted(fullName)) {
+        alert("Our records show you have already submitted your RSVP. Thank you!");
+        fullNameInput.value = "";
+        return;
+      }
+
+      const user = guestData[fullName];
+
+      if (user) {
+        currentUser = { ...user };
+        document.getElementById("form-section").style.display = "block";
+        document.getElementById("welcome-name").textContent = `Welcome, ${user.name}`;
+
+        // Add food & allergy inputs for main guest
+        const guestNames = document.getElementById("guest-names");
+        document.getElementById("main-meal-container").innerHTML = "";
+        document.getElementById("main-meal-container").appendChild(generateMealAndAllergyInputs('main-'));
+
+
+
+        // Couple description above attendance question
+        const coupleDesc = document.getElementById("couple-description");
+        coupleDesc.textContent = "If you are a couple or a family, please RSVP for your other members in the guest section.";
+
+        // Guest names inputs at the bottom with seats reserved header
+        const container = document.getElementById("guest-names");
+        const guestHeader = document.getElementById("guest-names-header");
+        container.innerHTML = "";
+        guestHeader.innerHTML = "";
+
+        if (user.allowedGuests > 0) {
+          guestHeader.innerHTML = `We have ${user.allowedGuests} ${user.allowedGuests === 1 ? 'seat' : 'seats'} reserved for you.`;
+          guestHeader.style.display = "block";
+
+     for (let i = 1; i <= user.allowedGuests; i++) {
+  const guestDiv = document.createElement('div');
+  guestDiv.style.marginBottom = "30px";
+
+  // Guest X label
+  const guestLabel = document.createElement('div');
+  guestLabel.textContent = `Guest ${i}`;
+  guestLabel.style.fontWeight = "bold";
+  guestLabel.style.margin = "10px 0 5px";
+  guestLabel.style.fontSize = "1.1rem";
+  guestDiv.appendChild(guestLabel);
+
+  // Name input
+  const nameInput = document.createElement('input');
+  nameInput.type = "text";
+  nameInput.name = `guest${i}`;
+  nameInput.placeholder = `Name of guest ${i}`;
+  nameInput.style.marginBottom = "10px";
+  guestDiv.appendChild(nameInput);
+
+  // Meal & allergy inputs
+  guestDiv.appendChild(generateMealAndAllergyInputs(`guest${i}-`));
+
+  container.appendChild(guestDiv);
+}
+        } else {
+          guestHeader.style.display = "none";
+const noPlusOneNote = document.createElement("p");
+noPlusOneNote.textContent = "Due to limited seating, we kindly ask that you RSVP for yourself only. We appreciate your understanding and can’t wait to celebrate with you!";
+noPlusOneNote.style.marginTop = "20px";
+noPlusOneNote.style.fontStyle = "italic";
+noPlusOneNote.style.color = "#666";
+document.getElementById("guest-names").appendChild(noPlusOneNote);
+        }
+      } else {
+        alert("Name not found. Please enter the full name exactly as on your invitation.");
+      }};
+  
+
+    // Show/hide event and guest fields depending on attendance answer
+    document.addEventListener('change', function(e) {
+      if (e.target.name === 'attendance') {
+        const eventSection = document.getElementById('event-section');
+        const guestNamesHeader = document.getElementById('guest-names-header');
+        const guestNamesContainer = document.getElementById('guest-names');
+        const foodFields = document.querySelectorAll('.meal-container');
+        const eventRadios = document.getElementsByName('event');
+
+        if (e.target.value === 'Yes') {
+        eventSection.style.display = 'block';
+        guestNamesHeader.style.display = 'block';
+        guestNamesContainer.style.display = 'block';
+        
+foodFields.forEach(f => f.style.display = 'block');
+foodFields.forEach(f => {
+  f.querySelectorAll('input').forEach(input => input.required = true);
+});
+
+
+
+          // Make event radios required when attending
+          Array.from(eventRadios).forEach(radio => radio.required = true);
+        } else {
+        eventSection.style.display = 'none';
+        guestNamesHeader.style.display = 'none';
+        guestNamesContainer.style.display = 'none';
+        
+foodFields.forEach(f => f.style.display = 'none');
+foodFields.forEach(f => {
+  f.querySelectorAll('input').forEach(input => input.required = false);
+});
+
+      }
+
+
+          // Remove required from event radios when not attending
+          Array.from(eventRadios).forEach(radio => radio.required = false);
+        }
+      });
+
+    document.getElementById("rsvp-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      try {
+        if (!currentUser) {
+          alert("Please enter your name and click Next before submitting.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit RSVP";
+          return;
+        }
+
+        if (hasSubmitted(currentUser.name)) {
+          alert("Our records show you have already submitted your RSVP. Thank you!");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit RSVP";
+          return;
+        }
+
+        // Gather form data
+        const attendanceRadios = document.getElementsByName("attendance");
+        let attendance = "";
+        for (const radio of attendanceRadios) {
+          if (radio.checked) {
+            attendance = radio.value;
+            break;
+          }
+        }
+
+        if (!attendance) {
+          alert("Please select if you're attending.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit RSVP";
+          return;
+        }
+let eventChoice = "None";
+
+if (attendance === "Yes") {
+  const eventRadios = document.getElementsByName("event");
+  for (const radio of eventRadios) {
+    if (radio.checked) {
+      eventChoice = radio.value;
+      break;
+    }
+  }
+  if (!eventChoice) {
+    alert("Please select which event you will attend.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit RSVP";
+    return;
+  }
+}
+
+const needsMeal = attendance === "Yes" && (eventChoice === "Reception" || eventChoice === "Both");
+
+if (attendance === "Yes") {
+          const eventRadios = document.getElementsByName("event");
+          eventChoice = "";
+          for (const radio of eventRadios) {
+            if (radio.checked) {
+              eventChoice = radio.value;
+              break;
+            }
+          }
+          if (!eventChoice) {
+            alert("Please select which event you will attend.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit RSVP";
+            return;
+          }
+        }
+// Collect main guest meal and allergy selections
+
+let mainAppetizer = '', mainMain = '', mainDessert = '', mainAllergy = '';
+if (needsMeal) {
+  mainAppetizer = document.querySelector('input[name="main-meal-appetizers"]:checked')?.value || '';
+  mainMain = document.querySelector('input[name="main-meal-main"]:checked')?.value || '';
+  mainDessert = document.querySelector('input[name="main-meal-dessert"]:checked')?.value || '';
+  mainAllergy = document.querySelector('input[name="main-allergies"]')?.value || '';
+}
+
+
+// Collect guest info with their meal and allergy selections
+// Only pick guest name inputs (exclude meal/allergy inputs)
+const guestInputs = document.querySelectorAll("#guest-names input[name^='guest']:not([name*='-'])");
+
+
+const guests = Array.from(guestInputs).map((input, index) => {
+  const i = index + 1;
+  const name = input.value.trim();
+  const ageInput = document.querySelector(`input[name="guest${i}-age"]:checked`);
+  const age = ageInput?.value || '';
+  const isChild = age === 'Child';
+
+  let appetizer = '', main = '', dessert = '', allergy = '';
+  if (name || needsMeal) {
+    appetizer = isChild ? 'Kids Meal' : document.querySelector(`input[name="guest${i}-meal-appetizers"]:checked`)?.value || '';
+    main = isChild ? 'Kids Meal' : document.querySelector(`input[name="guest${i}-meal-main"]:checked`)?.value || '';
+    dessert = isChild ? 'Kids Meal' : document.querySelector(`input[name="guest${i}-meal-dessert"]:checked`)?.value || '';
+    allergy = document.querySelector(`input[name="guest${i}-allergies"]`)?.value || '';
+  }
+
+  return { name, age, appetizer, main, dessert, allergy };
+}).filter(guest => guest.name || needsMeal);
+ // keep only guests with a name
+
+// Compose the data object to send
+const formData = {
+  name: currentUser.name,       // Main guest name (assumed already defined)
+  attendance: attendance,       // "Yes" or "No"
+  event: eventChoice,           // e.g. "Reception"
+  mainAppetizer,
+  mainMain,
+  mainDessert,
+  mainAllergy,
+  guests                       // Array of guest objects with name, meals, allergy
+};
+
+
+// Remove 'required' from hidden fields before submission
+document.querySelectorAll('.meal-container').forEach(container => {
+  if (container.offsetParent === null) {
+    container.querySelectorAll('input[required]').forEach(input => {
+      input.required = false;
+    });
+  }
+});
+
+        // Send POST request with no-cors mode (can't read response)
+        await fetch('https://script.google.com/macros/s/AKfycbyfDPp0E6dF4TzRSbjlgcsf1wA4ytGWIl2rBxBm-QmxsvxDd8RODZDJ0N1ol2ulmlscsQ/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        // Save name locally to prevent multiple submissions
+        saveSubmittedName(currentUser.name);
+
+        // Hide form and header, show thank-you message
+        document.getElementById("rsvp-form").style.display = "none";
+        document.getElementById("main-header").style.display = "none";
+        document.getElementById("thank-you").style.display = "block";
+        document.getElementById("rsvp-reminder").style.display = "none";
+
+      } catch (error) {
+        alert('Unexpected error: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit RSVP";
+      }
+    });
+
+    function generateMealAndAllergyInputs(prefix = '') {
+  const container = document.createElement('div');
+  container.classList.add('meal-container');
+
+let roleGroup = null;
+if (prefix !== 'main-') {
+  // Add Adult/Child selector only for guests
+  const roleLabel = document.createElement('label');
+  roleLabel.textContent = "Is this guest an adult or a child?";
+  container.appendChild(roleLabel);
+
+  roleGroup = document.createElement('div');
+  roleGroup.className = "radio-group";
+  roleGroup.innerHTML = `<label><input type="radio" name="${prefix}age" value="Adult"> Adult</label>
+<label><input type="radio" name="${prefix}age" value="Child"> Child</label>`;
+  container.appendChild(roleGroup);
+}
+
+  const mealHeader = document.createElement('label');
+  mealHeader.textContent = "Food Options";
+  mealHeader.classList.add('meal-header');
+  container.appendChild(mealHeader);
+
+  const childNote = document.createElement('div');
+  childNote.textContent = "Note: A child-friendly meal will be provided.";
+  childNote.style.fontStyle = "italic";
+  childNote.style.display = "none";
+  childNote.classList.add('child-note');
+  container.appendChild(childNote);
+
+  const mealOptions = document.createElement('div');
+  mealOptions.className = "radio-group";
+
+  const foodCategories = {
+  "Appetizers": [
+    { label: "Cream of Forest Mushroom", desc: "Butter, Onion, Garlic, Hermbs, Mixed Mushrooms, Potato, Cream, Salt & Pepper, Corn Flour, Truffle Oil, Dry Chives, Crostini" },
+    { label: "Chef's Special Caesar Salad", desc: "Romaine Lettuce, Caesar Dressing, Grated Egg, Bacon Crisp, Shaved Parmesan & Herb Croutons" }
+  ],
+  "Main": [
+    { label: "Grilled Filet Mignon", desc: "Mushroom Reduction Sauce, Seasonal Vegetables & Truffle Whipped Potatoes" },
+    { label: "Grilled Atlantic Salmon (Ratatouille)", desc: "Dill Beurre Blanc, Bundled Seasonal Vegetables & Truffle Whipped Potatoes" },
+    { label: "Vegetable Moussaka", desc: "Olive Oil, Onion, Garlic, Carrots, Celery, Leek, Potato, Eggplant, Dried Herbs, Milk, Flour, Margarine, Peeled Tomato, Tomato Paste, Fresh Tomato, Paprika Powder, Mozzarella Cheese with White Rice and Seasonal Vegetables" }
+  ],
+  "Dessert": [
+    { label: "Eton Mess Cheesecake", desc: "Digestive Biscuit, White Sugar, Butter, Cream Cheese, Yogurt, Fresh Egg Whole, Cream, Corn Flour, Vanilla Essence Garnished with Meringue, Raspberry Sauce and Mint Leaves" },
+    { label: "French Opera Caket", desc: "Flour, Fresh Egg Whole, Butter, Cream, Sugar, Chocolate, Coffee, Almond Powder" }
+  ]
+};
+
+
+  const mealInputs = [];
+
+ for (const [section, items] of Object.entries(foodCategories)) {
+  const sectionLabel = document.createElement('div');
+  sectionLabel.style.marginTop = "10px";
+  sectionLabel.style.fontWeight = "bold";
+  sectionLabel.textContent = section;
+  mealOptions.appendChild(sectionLabel);
+
+  const nameKey = section.toLowerCase();
+
+  items.forEach(item => {
+    const wrapper = document.createElement('div');
+    wrapper.style.marginBottom = "10px";
+
+    const input = document.createElement('input');
+    input.type = "radio";
+    input.name = `${prefix}meal-${nameKey}`;
+    input.value = item.label;
+    input.required = true;
+
+    const label = document.createElement('label');
+    label.style.display = "block";
+    label.style.marginBottom = "2px";
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(" " + item.label));
+
+    const desc = document.createElement('div');
+    desc.textContent = item.desc;
+    desc.style.fontSize = "0.85rem";
+    desc.style.marginLeft = "26px";
+    desc.style.color = "#666";
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(desc);
+    mealOptions.appendChild(wrapper);
+
+    mealInputs.push(input);
+  });
+}
+
+  container.appendChild(mealOptions);
+
+  const allergyLabel = document.createElement('label');
+  allergyLabel.textContent = "Please list any allergies: If no allergies, put None";
+  allergyLabel.style.marginTop = "10px";
+  container.appendChild(allergyLabel);
+
+  const allergyInput = document.createElement('input');
+  allergyInput.type = "text";
+  allergyInput.name = `${prefix}allergies`;
+  allergyInput.placeholder = "e.g. nuts, shellfish";
+  allergyInput.style.marginBottom = "20px";
+  container.appendChild(allergyInput);
+
+if (roleGroup) {
+  const toggleMealVisibility = () => {
+    const isChild = roleGroup.querySelector(`input[name="${prefix}age"]:checked`)?.value === 'Child';
+    mealHeader.style.display = isChild ? 'none' : 'block';
+    mealOptions.style.display = isChild ? 'none' : 'flex';
+    childNote.style.display = isChild ? 'block' : 'none';
+    mealInputs.forEach(input => input.required = !isChild);
+  };
+
+  roleGroup.addEventListener('change', toggleMealVisibility);
+  toggleMealVisibility();
+}
+
+
+  return container;
+}
+
+document.getElementById('event-choice').addEventListener('change', function () {
+  const selectedEvent = [...document.getElementsByName('event')].find(r => r.checked)?.value;
+
+  const foodFields = document.querySelectorAll('.meal-container');
+  if (selectedEvent === 'Reception' || selectedEvent === 'Both') {
+    
+foodFields.forEach(f => f.style.display = 'block');
+foodFields.forEach(f => {
+  f.querySelectorAll('input').forEach(input => input.required = true);
+});
+
+  } else {
+    
+foodFields.forEach(f => f.style.display = 'none');
+foodFields.forEach(f => {
+  f.querySelectorAll('input').forEach(input => input.required = false);
+});
+
+  }
+});
+  </script>
+</body>
+</html>
